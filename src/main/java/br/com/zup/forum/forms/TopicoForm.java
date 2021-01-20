@@ -1,13 +1,29 @@
 package br.com.zup.forum.forms;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 import br.com.zup.forum.modelo.Curso;
 import br.com.zup.forum.modelo.Topico;
 import br.com.zup.forum.repository.CursoRepository;
 
 public class TopicoForm {
 	
+	@NotNull
+	@NotBlank
+	@Length(min = 5)
 	private String titulo;
+	
+	@NotNull
+	@NotBlank
+	@Length(min = 10)
 	private String mensagem;
+	
+	@NotNull
+	@NotBlank
+	@Length(min = 5)
 	private String nomeCurso;
 	
 	public String getTitulo() {
