@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.zup.forum.modelo.Curso;
 import br.com.zup.forum.modelo.Topico;
@@ -17,6 +19,7 @@ import br.com.zup.forum.repository.UsuarioRepository;
 
 @SpringBootApplication
 @EnableSpringDataWebSupport
+@EnableCaching
 public class ForumApplication implements CommandLineRunner {
 	
 	@Autowired
@@ -41,7 +44,7 @@ public class ForumApplication implements CommandLineRunner {
 		Curso curso = new Curso("Spring Boot", "Programação");
 		Curso curso2 = new Curso("HTML 5", "Front-end");
 		
-		Usuario usuario = new Usuario("Aluno", "aluno@email", "12345");
+		Usuario usuario = new Usuario("Aluno", "aluno@email", new BCryptPasswordEncoder().encode("123456"));
 		
 		this.cursoRepository.saveAll(Arrays.asList(curso, curso2));
 		this.usuarioRepository.save(usuario);
