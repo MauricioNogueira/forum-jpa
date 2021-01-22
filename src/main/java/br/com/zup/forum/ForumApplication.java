@@ -6,20 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.zup.forum.modelo.Curso;
+import br.com.zup.forum.modelo.Perfil;
 import br.com.zup.forum.modelo.Topico;
 import br.com.zup.forum.modelo.Usuario;
 import br.com.zup.forum.repository.CursoRepository;
+import br.com.zup.forum.repository.PerfilRepository;
 import br.com.zup.forum.repository.TopicoRepository;
 import br.com.zup.forum.repository.UsuarioRepository;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSpringDataWebSupport
 @EnableCaching
+@EnableSwagger2
 public class ForumApplication implements CommandLineRunner {
 	
 	@Autowired
@@ -30,6 +36,9 @@ public class ForumApplication implements CommandLineRunner {
 	
 	@Autowired
 	private TopicoRepository topicoRepository;
+	
+	@Autowired
+	private PerfilRepository perfilRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ForumApplication.class, args);
@@ -44,10 +53,19 @@ public class ForumApplication implements CommandLineRunner {
 		Curso curso = new Curso("Spring Boot", "Programação");
 		Curso curso2 = new Curso("HTML 5", "Front-end");
 		
-		Usuario usuario = new Usuario("Aluno", "aluno@email", new BCryptPasswordEncoder().encode("123456"));
+		Perfil perfil = new Perfil("ROLE_ALUNO");
+		Perfil perfil2 = new Perfil("ROLE_MODERADOR");
+		
+		this.perfilRepository.saveAll(Arrays.asList(perfil, perfil2));
+		
+		Usuario usuario = new Usuario("Aluno", "aluno@email.com", new BCryptPasswordEncoder().encode("123456"));
+		Usuario usuario2 = new Usuario("Moderador", "moderador@email.com", new BCryptPasswordEncoder().encode("123456"));
+		
+		usuario.setPerfis(Arrays.asList(perfil));
+		usuario2.setPerfis(Arrays.asList(perfil2));
 		
 		this.cursoRepository.saveAll(Arrays.asList(curso, curso2));
-		this.usuarioRepository.save(usuario);
+		this.usuarioRepository.saveAll(Arrays.asList(usuario, usuario2));
 		
 		Topico topico1 = new Topico("Dúvida", "Erro ao criar projeto", curso);
 		topico1.setAutor(usuario);
@@ -58,4 +76,9 @@ public class ForumApplication implements CommandLineRunner {
 		
 		this.topicoRepository.saveAll(Arrays.asList(topico1, topico2, topico3));
 	}
+	
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+//		return builder.sources(ForumApplication.class);
+//	}
 }

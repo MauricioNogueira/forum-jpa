@@ -17,6 +17,13 @@ public class Perfil implements GrantedAuthority {
 	private Long id;
 	private String nome;
 	
+	@Deprecated
+	public Perfil() {}
+	
+	public Perfil(String nome) {
+		this.nome = nome;
+	}
+	
 	public Long getId() {
 		return id;
 	}
