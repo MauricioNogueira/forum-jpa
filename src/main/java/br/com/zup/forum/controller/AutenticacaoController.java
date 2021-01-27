@@ -34,7 +34,9 @@ public class AutenticacaoController {
 		UsernamePasswordAuthenticationToken dadosLogin = form.converter();
 		
 		try {
+			System.out.println("Iniciando autenticacao");
 			Authentication authentication = this.authManager.authenticate(dadosLogin);
+			System.out.println("Depois");
 			String token = tokenService.gerarToken(authentication);
 			
 			System.out.println(token);
